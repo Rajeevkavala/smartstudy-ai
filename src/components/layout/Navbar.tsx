@@ -56,9 +56,9 @@ export default function Navbar() {
         </div>
 
         <div className="hidden md:flex items-center gap-2.5">
-          <a href="#login" className="text-sm cursor-pointer transition-colors" style={{ color: 'hsl(var(--text-muted))' }}>Log in</a>
-          <a
-            href="#cta"
+          <Link to="/auth" className="text-sm cursor-pointer transition-colors" style={{ color: 'hsl(var(--text-muted))' }}>Log in</Link>
+          <Link
+            to="/auth"
             className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium text-primary-foreground transition-all duration-300 cursor-pointer hover:translate-y-[-1px]"
             style={{
               background: 'hsl(var(--primary))',
@@ -67,7 +67,7 @@ export default function Navbar() {
           >
             Try Free
             <ArrowRight size={13} />
-          </a>
+          </Link>
         </div>
 
         <button
