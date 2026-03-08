@@ -12,26 +12,35 @@ const stats = [
 
 export default function StatsSection() {
   return (
-    <section className="py-6 px-6">
+    <section className="py-4 px-6">
       <div className="max-w-5xl mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-border/20 bg-border/10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease }}
+          className="grid grid-cols-2 md:grid-cols-4 rounded-2xl overflow-hidden"
+          style={{
+            border: '1px solid hsl(var(--border) / 0.3)',
+            background: 'hsl(var(--surface))',
+          }}
+        >
           {stats.map((s, i) => (
-            <motion.div
+            <div
               key={s.label}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, ease, delay: i * 0.08 }}
-              className="bg-surface p-6 md:p-8 text-center"
+              className="p-6 md:p-8 text-center relative"
+              style={{
+                borderRight: i < 3 ? '1px solid hsl(var(--border) / 0.15)' : 'none',
+              }}
             >
-              <p className="font-mono text-2xl md:text-3xl font-bold text-foreground tracking-tight">
+              <p className="font-mono font-bold tracking-tight" style={{ fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', color: 'hsl(var(--foreground))' }}>
                 {s.decimal ? <span>{s.target}</span> : <AnimatedCounter target={s.target} />}
-                <span className="font-drama italic text-primary ml-0.5 text-xl md:text-2xl">{s.suffix}</span>
+                <span className="font-drama italic ml-0.5" style={{ color: 'hsl(var(--primary))', fontSize: '0.7em' }}>{s.suffix}</span>
               </p>
-              <p className="text-text-muted text-xs mt-1.5 font-display tracking-wide">{s.label}</p>
-            </motion.div>
+              <p className="text-xs mt-2 tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>{s.label}</p>
+            </div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
