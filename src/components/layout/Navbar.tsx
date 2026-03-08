@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Menu, X, ArrowRight } from 'lucide-react';
+import { Sparkles, Menu, X, ArrowRight, LayoutDashboard } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '@/contexts/AuthContext';
 
 const navLinks = [
   { label: 'Features', href: '#features' },
@@ -12,6 +13,7 @@ const navLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { user, signOut } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 80);
@@ -56,18 +58,43 @@ export default function Navbar() {
         </div>
 
         <div className="hidden md:flex items-center gap-2.5">
-          <Link to="/auth" className="text-sm cursor-pointer transition-colors" style={{ color: 'hsl(var(--text-muted))' }}>Log in</Link>
-          <Link
-            to="/auth"
-            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium text-primary-foreground transition-all duration-300 cursor-pointer hover:translate-y-[-1px]"
-            style={{
-              background: 'hsl(var(--primary))',
-              boxShadow: '0 2px 12px hsl(var(--primary) / 0.3)',
-            }}
-          >
-            Try Free
-            <ArrowRight size={13} />
-          </Link>
+          {user ? (
+            <>
+              <Link
+                to="/dashboard"
+                className="inline-flex items-center gap-1.5 text-sm cursor-pointer transition-colors"
+                style={{ color: 'hsl(var(--text-muted))' }}
+              >
+                <LayoutDashboard size={14} />
+                Dashboard
+              </Link>
+              <button
+                onClick={() => signOut()}
+                className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium cursor-pointer transition-all duration-300 hover:translate-y-[-1px]"
+                style={{
+                  background: 'hsl(var(--muted) / 0.3)',
+                  color: 'hsl(var(--foreground))',
+                }}
+              >
+                Sign out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/auth" className="text-sm cursor-pointer transition-colors" style={{ color: 'hsl(var(--text-muted))' }}>Log in</Link>
+              <Link
+                to="/auth"
+                className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium text-primary-foreground transition-all duration-300 cursor-pointer hover:translate-y-[-1px]"
+                style={{
+                  background: 'hsl(var(--primary))',
+                  boxShadow: '0 2px 12px hsl(var(--primary) / 0.3)',
+                }}
+              >
+                Try Free
+                <ArrowRight size={13} />
+              </Link>
+            </>
+          )}
         </div>
 
         <button
@@ -106,9 +133,25 @@ export default function Navbar() {
                 </a>
               ))}
               <div className="mt-3 pt-3" style={{ borderTop: '1px solid hsl(var(--border) / 0.3)' }}>
-                <Link to="/auth" className="btn-primary justify-center text-sm py-3 w-full" onClick={() => setMobileOpen(false)}>
-                  Try for Free <ArrowRight size={14} />
-                </Link>
+                {user ? (
+                  <>
+                    <Link to="/dashboard" className="flex items-center gap-2 text-sm py-2.5 px-3 rounded-lg cursor-pointer transition-colors" style={{ color: 'hsl(var(--text-muted))' }} onClick={() => setMobileOpen(false)}>
+                      <LayoutDashboard size={14} />
+                      Dashboard
+                    </Link>
+                    <button
+                      onClick={() => { signOut(); setMobileOpen(false); }}
+                      className="w-full text-left text-sm py-2.5 px-3 rounded-lg cursor-pointer transition-colors"
+                      style={{ color: 'hsl(var(--text-muted))' }}
+                    >
+                      Sign out
+                    </button>
+                  </>
+                ) : (
+                  <Link to="/auth" className="btn-primary justify-center text-sm py-3 w-full" onClick={() => setMobileOpen(false)}>
+                    Try for Free <ArrowRight size={14} />
+                  </Link>
+                )}
               </div>
             </div>
           </motion.div>
