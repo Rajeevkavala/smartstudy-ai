@@ -133,9 +133,25 @@ export default function Navbar() {
                 </a>
               ))}
               <div className="mt-3 pt-3" style={{ borderTop: '1px solid hsl(var(--border) / 0.3)' }}>
-                <Link to="/auth" className="btn-primary justify-center text-sm py-3 w-full" onClick={() => setMobileOpen(false)}>
-                  Try for Free <ArrowRight size={14} />
-                </Link>
+                {user ? (
+                  <>
+                    <Link to="/dashboard" className="flex items-center gap-2 text-sm py-2.5 px-3 rounded-lg cursor-pointer transition-colors" style={{ color: 'hsl(var(--text-muted))' }} onClick={() => setMobileOpen(false)}>
+                      <LayoutDashboard size={14} />
+                      Dashboard
+                    </Link>
+                    <button
+                      onClick={() => { signOut(); setMobileOpen(false); }}
+                      className="w-full text-left text-sm py-2.5 px-3 rounded-lg cursor-pointer transition-colors"
+                      style={{ color: 'hsl(var(--text-muted))' }}
+                    >
+                      Sign out
+                    </button>
+                  </>
+                ) : (
+                  <Link to="/auth" className="btn-primary justify-center text-sm py-3 w-full" onClick={() => setMobileOpen(false)}>
+                    Try for Free <ArrowRight size={14} />
+                  </Link>
+                )}
               </div>
             </div>
           </motion.div>
