@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Sparkles, Menu, X, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -55,9 +56,9 @@ export default function Navbar() {
         </div>
 
         <div className="hidden md:flex items-center gap-2.5">
-          <a href="#login" className="text-sm cursor-pointer transition-colors" style={{ color: 'hsl(var(--text-muted))' }}>Log in</a>
-          <a
-            href="#cta"
+          <Link to="/auth" className="text-sm cursor-pointer transition-colors" style={{ color: 'hsl(var(--text-muted))' }}>Log in</Link>
+          <Link
+            to="/auth"
             className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium text-primary-foreground transition-all duration-300 cursor-pointer hover:translate-y-[-1px]"
             style={{
               background: 'hsl(var(--primary))',
@@ -66,7 +67,7 @@ export default function Navbar() {
           >
             Try Free
             <ArrowRight size={13} />
-          </a>
+          </Link>
         </div>
 
         <button
@@ -105,9 +106,9 @@ export default function Navbar() {
                 </a>
               ))}
               <div className="mt-3 pt-3" style={{ borderTop: '1px solid hsl(var(--border) / 0.3)' }}>
-                <a href="#cta" className="btn-primary justify-center text-sm py-3 w-full" onClick={() => setMobileOpen(false)}>
+                <Link to="/auth" className="btn-primary justify-center text-sm py-3 w-full" onClick={() => setMobileOpen(false)}>
                   Try for Free <ArrowRight size={14} />
-                </a>
+                </Link>
               </div>
             </div>
           </motion.div>
