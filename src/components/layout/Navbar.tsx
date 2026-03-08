@@ -106,9 +106,9 @@ export default function Navbar() {
                 </a>
               ))}
               <div className="mt-3 pt-3" style={{ borderTop: '1px solid hsl(var(--border) / 0.3)' }}>
-                <a href="#cta" className="btn-primary justify-center text-sm py-3 w-full" onClick={() => setMobileOpen(false)}>
+                <Link to="/auth" className="btn-primary justify-center text-sm py-3 w-full" onClick={() => setMobileOpen(false)}>
                   Try for Free <ArrowRight size={14} />
-                </a>
+                </Link>
               </div>
             </div>
           </motion.div>

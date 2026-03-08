@@ -266,11 +266,11 @@ export default function HeroSection() {
             transition={{ duration: 0.7, ease, delay: 0.7 }}
             className="flex flex-col sm:flex-row gap-3 mt-9"
           >
-            <a href="#cta" className="btn-primary text-[0.9rem] group">
+            <Link to="/upload" className="btn-primary text-[0.9rem] group">
               <Upload size={15} className="group-hover:translate-y-[-1px] transition-transform" />
               Upload your PDF
               <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
-            </a>
+            </Link>
             <a href="#demo" className="btn-secondary text-[0.9rem]">
               <Play size={14} className="fill-current" />
               Watch Demo

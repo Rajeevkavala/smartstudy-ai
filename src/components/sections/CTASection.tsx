@@ -62,14 +62,14 @@ export default function CTASection() {
           transition={{ duration: 0.6, ease, delay: 0.2 }}
           className="flex flex-col sm:flex-row gap-3 justify-center mt-10"
         >
-          <a href="#" className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-semibold text-sm cursor-pointer transition-all duration-300 hover:translate-y-[-2px] hover:shadow-[0_12px_40px_rgba(0,0,0,0.3)]" style={{ background: 'white', color: 'hsl(var(--primary))' }}>
+          <Link to="/upload" className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-semibold text-sm cursor-pointer transition-all duration-300 hover:translate-y-[-2px] hover:shadow-[0_12px_40px_rgba(0,0,0,0.3)]" style={{ background: 'white', color: 'hsl(var(--primary))' }}>
             <Upload size={15} />
             Upload your notes
             <ArrowRight size={15} />
-          </a>
-          <a href="#" className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-semibold text-sm text-white cursor-pointer transition-all duration-300 hover:translate-y-[-1px]" style={{ border: '1px solid rgba(255,255,255,0.25)', background: 'rgba(255,255,255,0.08)' }}>
+          </Link>
+          <Link to="/auth" className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-semibold text-sm text-white cursor-pointer transition-all duration-300 hover:translate-y-[-1px]" style={{ border: '1px solid rgba(255,255,255,0.25)', background: 'rgba(255,255,255,0.08)' }}>
             Start free
-          </a>
+          </Link>
         </motion.div>
 
         <motion.p
