@@ -85,6 +85,16 @@
 }
 
 @layer components {
+  /* Noise overlay for depth */
+  .noise-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
   .glass-card {
     @apply backdrop-blur-xl border rounded-2xl;
     background: rgba(255, 255, 255, 0.04);
@@ -117,7 +127,7 @@
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl font-body font-medium text-foreground cursor-pointer transition-all duration-300;
+    @apply inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-body font-medium text-foreground cursor-pointer transition-all duration-300;
     background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
     box-shadow: 0 4px 24px rgba(124, 58, 237, 0.25);
   }
@@ -129,7 +139,7 @@
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl font-body font-medium cursor-pointer transition-all duration-300;
+    @apply inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-body font-medium cursor-pointer transition-all duration-300;
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: hsl(var(--text-primary));
@@ -163,7 +173,7 @@
     filter: drop-shadow(0 0 12px rgba(124, 58, 237, 0.6));
   }
 
-  /* Marquee animation */
+  /* Marquee animation for trust section */
   @keyframes marquee {
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); }
@@ -177,10 +187,10 @@
     animation-play-state: paused;
   }
 
-  /* Bento card with mouse-tracking spotlight */
+  /* Bento card variants */
   .bento-card {
     @apply relative overflow-hidden rounded-2xl p-6 transition-all duration-500;
-    background: rgba(255, 255, 255, 0.025);
+    background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.05);
   }
 
@@ -203,29 +213,9 @@
     opacity: 1;
   }
 
-  /* Section divider */
+  /* Divider line */
   .section-divider {
-    @apply w-full max-w-6xl mx-auto;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06) 50%, transparent);
-  }
-
-  /* Grid dot pattern */
-  .dot-pattern {
-    background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
-    background-size: 24px 24px;
-  }
-
-  /* Glow orb */
-  .glow-orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(100px);
-    pointer-events: none;
-  }
-
-  /* Step connector line */
-  .step-connector {
-    background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--accent)));
+    @apply w-full border-t;
+    border-color: rgba(255, 255, 255, 0.04);
   }
 }
