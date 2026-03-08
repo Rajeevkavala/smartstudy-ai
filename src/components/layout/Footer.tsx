@@ -1,28 +1,34 @@
-import { Bot, Twitter, Linkedin, Github } from 'lucide-react';
+import { Sparkles, Twitter, Linkedin, Github } from 'lucide-react';
 
 const productLinks = ['Features', 'Documentation', 'Pricing', 'Changelog'];
 const companyLinks = ['About', 'Contact', 'Careers'];
-const legalLinks = ['Privacy', 'Terms', 'Cookies'];
+const legalLinks = ['Privacy Policy', 'Terms of Service', 'Cookie Policy'];
 
 export default function Footer() {
   return (
-    <footer className="border-t border-border/20 bg-background">
-      <div className="max-w-6xl mx-auto px-6 py-14">
+    <footer className="bg-footer-bg rounded-t-[2.5rem] border-t border-border/10">
+      {/* Gradient rule at top */}
+      <div className="h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+
+      <div className="max-w-6xl mx-auto px-6 py-16">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
           {/* Brand */}
           <div className="col-span-2">
             <a href="#" className="flex items-center gap-2 mb-3 cursor-pointer">
-              <div className="w-6 h-6 rounded-md bg-primary/15 flex items-center justify-center border border-primary/15">
-                <Bot size={12} className="text-primary" />
-              </div>
-              <span className="font-heading font-semibold text-sm text-foreground">SmartExam AI</span>
+              <Sparkles size={16} className="text-primary" />
+              <span className="font-display font-semibold text-sm text-foreground">SmartExam AI</span>
             </a>
-            <p className="text-text-muted text-sm leading-relaxed max-w-xs">
+            <p className="text-text-muted text-sm leading-relaxed max-w-[220px]">
               AI-powered exam preparation for every student.
             </p>
-            <div className="flex items-center gap-0.5 mt-4">
+            <div className="flex items-center gap-1 mt-5">
               {[Twitter, Linkedin, Github].map((Icon, i) => (
-                <a key={i} href="#" className="p-2 text-text-muted/50 hover:text-text-muted transition-colors cursor-pointer" aria-label="Social link">
+                <a
+                  key={i}
+                  href="#"
+                  className="p-2 rounded-lg text-text-muted/40 hover:text-foreground hover:bg-muted/20 transition-all duration-200 cursor-pointer"
+                  aria-label="Social link"
+                >
                   <Icon size={16} />
                 </a>
               ))}
@@ -35,10 +41,10 @@ export default function Footer() {
             { title: 'Legal', links: legalLinks },
           ].map((col) => (
             <div key={col.title}>
-              <h4 className="text-xs font-mono text-text-muted/60 uppercase tracking-[0.15em] mb-4">
+              <h4 className="text-[11px] font-mono text-text-muted/50 uppercase tracking-[0.15em] mb-4">
                 {col.title}
               </h4>
-              <ul className="space-y-2">
+              <ul className="space-y-2.5">
                 {col.links.map((link) => (
                   <li key={link}>
                     <a href="#" className="text-text-muted hover:text-foreground text-sm transition-colors duration-200 cursor-pointer">
@@ -51,9 +57,12 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="border-t border-border/15 mt-12 pt-6 flex flex-col md:flex-row justify-between items-center gap-3">
-          <p className="text-[11px] text-text-muted/40 font-mono">&copy; 2026 SmartExam AI</p>
-          <p className="text-[11px] text-text-muted/40 font-mono">Built with AI ✦</p>
+        <div className="border-t border-border/10 mt-14 pt-6 flex flex-col md:flex-row justify-between items-center gap-3">
+          <p className="text-[11px] text-text-muted/30 font-mono">&copy; {new Date().getFullYear()} SmartExam AI. All rights reserved.</p>
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
+            <span className="text-[11px] font-mono text-success/70">System Operational</span>
+          </div>
         </div>
       </div>
     </footer>
