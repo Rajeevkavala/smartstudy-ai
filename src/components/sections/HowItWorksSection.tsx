@@ -1,41 +1,45 @@
 import { motion } from 'framer-motion';
 import { Upload, Search, SlidersHorizontal, CheckCircle } from 'lucide-react';
-import SectionBadge from '@/components/ui/SectionBadge';
-import GradientText from '@/components/ui/GradientText';
 
-const ease: [number, number, number, number] = [0.25, 0.1, 0.25, 1];
+const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const steps = [
-  { icon: Upload, title: 'Upload your PDF', desc: 'Upload your notes, textbooks, or study material. Supports multi-PDF knowledge base.' },
-  { icon: Search, title: 'Ask questions', desc: 'Ask any question from your uploaded material. AI understands full document context.' },
-  { icon: SlidersHorizontal, title: 'Choose answer length', desc: 'Select 2-mark, 4-mark, 8-mark, or 16-mark answer format for your exam type.' },
-  { icon: CheckCircle, title: 'Get perfect answers', desc: 'AI generates structured, exam-ready answers with proper headings and bullet points.' },
+  { icon: Upload, title: 'Upload', desc: 'Drop your PDF notes, textbooks, or study material.' },
+  { icon: Search, title: 'Ask', desc: 'Ask any question. AI understands the full document context.' },
+  { icon: SlidersHorizontal, title: 'Choose', desc: 'Select 2, 4, 8, or 16-mark answer format.' },
+  { icon: CheckCircle, title: 'Get Answers', desc: 'Receive structured, exam-ready answers with sources.' },
 ];
 
 export default function HowItWorksSection() {
   return (
-    <section id="how-it-works" className="py-24 px-4">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center">
-          <SectionBadge>How it Works</SectionBadge>
-          <h2 className="font-heading text-3xl md:text-4xl font-bold mt-4">
-            <GradientText>From PDF to exam answers in seconds</GradientText>
-          </h2>
-          <p className="text-text-muted mt-4 max-w-xl mx-auto">A simple 4-step workflow designed for busy students</p>
+    <section id="how-it-works" className="py-28 px-6">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center max-w-lg mx-auto">
+          <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="section-label">
+            How it works
+          </motion.span>
+          <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, ease }} className="font-heading text-3xl md:text-4xl font-bold mt-3 text-foreground">
+            Four steps to better grades.
+          </motion.h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-16 relative">
-          <div className="hidden md:block absolute top-10 left-[12.5%] right-[12.5%] h-px z-0" style={{ background: 'linear-gradient(90deg, #7C3AED, #6366F1, #3B82F6, #06B6D4)' }} />
-
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-px mt-16 bg-border/20 rounded-2xl overflow-hidden border border-border/20">
           {steps.map((s, i) => (
-            <motion.div key={s.title} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, ease, delay: i * 0.15 }} className="glass-card p-6 text-center relative z-10">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center font-heading font-bold text-sm mx-auto mb-4 text-foreground" style={{ background: 'linear-gradient(135deg, #7C3AED, #6366F1)' }}>
-                {i + 1}
+            <motion.div
+              key={s.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, ease, delay: i * 0.1 }}
+              className="bg-background p-8 text-center relative group hover:bg-card/50 transition-colors duration-500"
+            >
+              {/* Step number */}
+              <span className="text-[10px] font-mono text-text-muted/40 absolute top-4 left-4">0{i + 1}</span>
+              
+              <div className="w-12 h-12 rounded-2xl bg-primary/8 border border-primary/10 flex items-center justify-center mx-auto mb-5 group-hover:bg-primary/15 transition-colors duration-500">
+                <s.icon size={20} className="text-text-accent" />
               </div>
-              <div className="icon-container mx-auto mb-3 w-14 h-14">
-                <s.icon size={24} className="text-text-accent" />
-              </div>
-              <h3 className="font-heading font-semibold text-lg text-foreground mt-3 mb-2">{s.title}</h3>
+              <h3 className="font-heading font-semibold text-lg text-foreground mb-2">{s.title}</h3>
               <p className="text-text-muted text-sm leading-relaxed">{s.desc}</p>
             </motion.div>
           ))}
