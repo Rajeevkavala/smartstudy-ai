@@ -25,26 +25,24 @@ export default function TrustSection() {
   const doubledStats = [...stats, ...stats];
 
   return (
-    <section className="py-8 overflow-hidden space-y-3">
-      {/* Row 1 — Partner logos */}
+    <section className="py-10 overflow-hidden space-y-4">
       <div className="ticker-mask">
         <div className="flex animate-marquee" style={{ width: 'max-content' }}>
           {doubledLogos.map((logo, i) => (
-            <div key={`${logo.name}-${i}`} className="flex items-center gap-2.5 px-8 py-2">
-              <logo.icon size={14} className="text-text-muted/25" />
-              <span className="text-text-muted/25 font-display font-medium text-sm whitespace-nowrap tracking-wide">{logo.name}</span>
+            <div key={`${logo.name}-${i}`} className="flex items-center gap-2.5 px-8 py-2.5">
+              <logo.icon size={14} style={{ color: 'hsl(var(--text-muted) / 0.25)' }} />
+              <span className="font-display font-medium text-sm whitespace-nowrap tracking-wide" style={{ color: 'hsl(var(--text-muted) / 0.25)' }}>{logo.name}</span>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Row 2 — Stats ticker (reversed direction) */}
       <div className="ticker-mask">
         <div className="flex animate-marquee-reverse" style={{ width: 'max-content' }}>
           {doubledStats.map((stat, i) => (
             <div key={`${stat}-${i}`} className="flex items-center gap-6 px-6 py-2">
-              <span className="text-text-muted/35 font-mono text-xs whitespace-nowrap tracking-wide">{stat}</span>
-              <span className="text-text-muted/15">·</span>
+              <span className="font-mono text-xs whitespace-nowrap tracking-wide" style={{ color: 'hsl(var(--text-muted) / 0.35)' }}>{stat}</span>
+              <span style={{ color: 'hsl(var(--text-muted) / 0.15)' }}>·</span>
             </div>
           ))}
         </div>

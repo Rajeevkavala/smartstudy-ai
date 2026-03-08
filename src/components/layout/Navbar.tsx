@@ -5,8 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const navLinks = [
   { label: 'Features', href: '#features' },
   { label: 'How it Works', href: '#how-it-works' },
-  { label: 'Pricing', href: '#pricing' },
-  { label: 'Docs', href: '#docs' },
+  { label: 'Demo', href: '#demo' },
 ];
 
 export default function Navbar() {
@@ -14,53 +13,62 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 100);
-    window.addEventListener('scroll', handleScroll);
+    const handleScroll = () => setScrolled(window.scrollY > 80);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-3rem)] max-w-4xl">
+    <nav className="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2.5rem)] max-w-3xl">
       <motion.div
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className={`flex items-center justify-between px-5 py-2.5 rounded-full transition-all duration-500 ${
-          scrolled
-            ? 'bg-background/80 backdrop-blur-2xl border border-primary/15 shadow-glow-purple'
-            : 'bg-background/40 backdrop-blur-xl border border-border/30'
-        }`}
+        className="flex items-center justify-between px-5 py-2 rounded-full transition-all duration-500"
+        style={{
+          background: scrolled ? 'hsl(var(--background) / 0.85)' : 'hsl(var(--background) / 0.4)',
+          backdropFilter: 'blur(20px) saturate(1.3)',
+          WebkitBackdropFilter: 'blur(20px) saturate(1.3)',
+          border: scrolled ? '1px solid hsl(var(--primary) / 0.12)' : '1px solid hsl(var(--foreground) / 0.06)',
+          boxShadow: scrolled ? '0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px hsl(var(--primary) / 0.05)' : 'none',
+        }}
       >
-        {/* Logo */}
         <a href="#" className="flex items-center gap-2 cursor-pointer">
-          <Sparkles size={16} className="text-primary" />
+          <Sparkles size={15} style={{ color: 'hsl(var(--primary))' }} />
           <span className="font-display font-semibold text-sm text-foreground">SmartExam AI</span>
         </a>
 
-        {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-1">
+        <div className="hidden md:flex items-center gap-0.5">
           {navLinks.map((link) => (
             <a
               key={link.label}
               href={link.href}
-              className="relative text-text-muted hover:text-foreground transition-colors duration-200 text-sm px-3 py-1.5 rounded-lg group cursor-pointer"
+              className="relative text-sm px-3 py-1.5 rounded-lg group cursor-pointer transition-colors duration-200"
+              style={{ color: 'hsl(var(--text-muted))' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = 'hsl(var(--foreground))')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = 'hsl(var(--text-muted))')}
             >
               {link.label}
-              <span className="absolute bottom-0.5 left-3 right-3 h-px bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+              <span className="absolute bottom-0.5 left-3 right-3 h-px scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" style={{ background: 'hsl(var(--primary))' }} />
             </a>
           ))}
         </div>
 
-        {/* Desktop CTA */}
-        <div className="hidden md:flex items-center gap-3">
-          <a href="#login" className="text-text-muted hover:text-foreground transition-colors text-sm cursor-pointer">Log in</a>
-          <a href="#cta" className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium bg-primary text-primary-foreground hover:shadow-glow-purple transition-all duration-300 cursor-pointer">
-            Try for Free
-            <ArrowRight size={14} />
+        <div className="hidden md:flex items-center gap-2.5">
+          <a href="#login" className="text-sm cursor-pointer transition-colors" style={{ color: 'hsl(var(--text-muted))' }}>Log in</a>
+          <a
+            href="#cta"
+            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium text-primary-foreground transition-all duration-300 cursor-pointer hover:translate-y-[-1px]"
+            style={{
+              background: 'hsl(var(--primary))',
+              boxShadow: '0 2px 12px hsl(var(--primary) / 0.3)',
+            }}
+          >
+            Try Free
+            <ArrowRight size={13} />
           </a>
         </div>
 
-        {/* Mobile toggle */}
         <button
           className="md:hidden text-foreground p-1.5 cursor-pointer"
           onClick={() => setMobileOpen(!mobileOpen)}
@@ -70,30 +78,34 @@ export default function Navbar() {
         </button>
       </motion.div>
 
-      {/* Mobile drawer */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10, scale: 0.98 }}
+            initial={{ opacity: 0, y: -8, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.98 }}
+            exit={{ opacity: 0, y: -8, scale: 0.98 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden mt-2 rounded-2xl border border-border/30 bg-background/95 backdrop-blur-2xl p-5"
+            className="md:hidden mt-2 rounded-2xl p-5"
+            style={{
+              background: 'hsl(var(--background) / 0.95)',
+              backdropFilter: 'blur(24px)',
+              border: '1px solid hsl(var(--border) / 0.3)',
+            }}
           >
             <div className="flex flex-col gap-1">
               {navLinks.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
-                  className="text-text-muted hover:text-foreground transition-colors text-sm py-2.5 px-3 rounded-lg hover:bg-muted/20 cursor-pointer"
+                  className="text-sm py-2.5 px-3 rounded-lg cursor-pointer transition-colors"
+                  style={{ color: 'hsl(var(--text-muted))' }}
                   onClick={() => setMobileOpen(false)}
                 >
                   {link.label}
                 </a>
               ))}
-              <div className="border-t border-border/30 mt-3 pt-3 flex flex-col gap-2">
-                <a href="#login" className="text-text-muted text-sm py-2 px-3 cursor-pointer" onClick={() => setMobileOpen(false)}>Log in</a>
-                <a href="#cta" className="btn-primary justify-center text-sm py-3" onClick={() => setMobileOpen(false)}>
+              <div className="mt-3 pt-3" style={{ borderTop: '1px solid hsl(var(--border) / 0.3)' }}>
+                <a href="#cta" className="btn-primary justify-center text-sm py-3 w-full" onClick={() => setMobileOpen(false)}>
                   Try for Free <ArrowRight size={14} />
                 </a>
               </div>

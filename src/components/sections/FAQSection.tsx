@@ -12,20 +12,20 @@ const faqs = [
     a: "PDF is the primary format. Support for .docx and .pptx is in beta. You can upload multiple files and SmartExam AI builds a unified knowledge base from all of them.",
   },
   {
-    q: "How accurate are the answers? Will it hallucinate?",
+    q: "How accurate are the answers?",
     a: "SmartExam AI only answers from your uploaded documents — it does not generate content from general knowledge. Every answer includes a source reference (chapter + page number) so you can verify it instantly.",
   },
   {
     q: "Can I use it for any subject?",
-    a: "Yes. It has been used across Engineering (CS, ECE, Mech), Medical (MBBS, NEET), Law, Management, and Humanities. If your notes are in the PDF, SmartExam AI can answer from them.",
+    a: "Yes. It has been used across Engineering, Medical, Law, Management, and Humanities. If your notes are in the PDF, SmartExam AI can answer from them.",
   },
   {
-    q: "Is my uploaded content private and secure?",
-    a: "All uploaded files are encrypted in transit and at rest. Your documents are never used to train AI models. You can delete your data at any time from your account.",
+    q: "Is my uploaded content private?",
+    a: "All uploaded files are encrypted in transit and at rest. Your documents are never used to train AI models. You can delete your data at any time.",
   },
   {
     q: "What happens after my free trial ends?",
-    a: "You move to the free plan (limited questions per day) or upgrade to continue full access. No data is lost. No automatic charges — you choose when to upgrade.",
+    a: "You move to the free plan (limited questions per day) or upgrade for full access. No data is lost. No automatic charges — you choose when to upgrade.",
   },
 ];
 
@@ -33,36 +33,46 @@ export default function FAQSection() {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
 
   return (
-    <section className="py-28 px-6">
+    <section className="py-32 px-6">
       <div className="max-w-3xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-14">
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
+        <div className="text-center mb-16">
+          <h2 className="font-display font-bold text-foreground" style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)' }}>
             Everything you need to know
           </h2>
-          <p className="text-text-muted mt-3">
+          <p className="mt-3" style={{ color: 'hsl(var(--text-muted))' }}>
             Real questions from students, answered.
           </p>
         </div>
 
-        {/* Accordion */}
-        <div className="space-y-0">
+        <div>
           {faqs.map((faq, i) => {
             const isOpen = openIdx === i;
             return (
-              <div key={i} className="border-b border-border/15">
+              <div key={i} style={{ borderBottom: '1px solid hsl(var(--border) / 0.15)' }}>
                 <button
                   onClick={() => setOpenIdx(isOpen ? null : i)}
-                  className="w-full flex items-center justify-between py-5 text-left cursor-pointer group"
+                  className="w-full flex items-center justify-between py-6 text-left cursor-pointer group"
                   aria-expanded={isOpen}
                 >
-                  <span className={`font-display font-medium text-base transition-colors ${isOpen ? 'text-foreground' : 'text-text-secondary group-hover:text-foreground'}`}>
+                  <span className="font-display font-medium text-base transition-colors pr-4" style={{ color: isOpen ? 'hsl(var(--foreground))' : 'hsl(var(--text-secondary))' }}>
                     {faq.q}
                   </span>
-                  <Plus
-                    size={18}
-                    className={`text-text-muted shrink-0 ml-4 transition-transform duration-300 ${isOpen ? 'rotate-45 text-primary' : ''}`}
-                  />
+                  <div
+                    className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all duration-300"
+                    style={{
+                      background: isOpen ? 'hsl(var(--primary) / 0.1)' : 'hsl(var(--muted) / 0.1)',
+                      border: `1px solid ${isOpen ? 'hsl(var(--primary) / 0.2)' : 'hsl(var(--border) / 0.15)'}`,
+                    }}
+                  >
+                    <Plus
+                      size={14}
+                      className="transition-transform duration-300"
+                      style={{
+                        transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)',
+                        color: isOpen ? 'hsl(var(--primary))' : 'hsl(var(--text-muted))',
+                      }}
+                    />
+                  </div>
                 </button>
                 <AnimatePresence>
                   {isOpen && (
@@ -73,7 +83,7 @@ export default function FAQSection() {
                       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                       className="overflow-hidden"
                     >
-                      <p className="text-text-muted text-sm leading-relaxed pb-5 pr-8">
+                      <p className="text-sm leading-relaxed pb-6 pr-12" style={{ color: 'hsl(var(--text-muted))' }}>
                         {faq.a}
                       </p>
                     </motion.div>

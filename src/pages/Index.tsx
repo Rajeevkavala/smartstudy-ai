@@ -19,12 +19,13 @@ const Index = () => {
         <HeroSection />
         <TrustSection />
         <StatsSection />
+        <div className="section-divider" />
         <FeaturesSection />
         <HowItWorksSection />
         <DemoSection />
         <div className="section-divider" />
-        <TestimonialsSection />
         <SmartFeaturesSection />
+        <TestimonialsSection />
         <div className="section-divider" />
         <FAQSection />
         <CTASection />
