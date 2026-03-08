@@ -65,11 +65,17 @@ export default {
         "text-muted": "hsl(var(--text-muted))",
         "text-accent": "hsl(var(--text-accent))",
         "footer-bg": "hsl(var(--footer-bg))",
+        "mark-2": "hsl(var(--mark-2))",
+        "mark-4": "hsl(var(--mark-4))",
+        "mark-8": "hsl(var(--mark-8))",
+        "mark-16": "hsl(var(--mark-16))",
       },
       fontFamily: {
-        heading: ["Space Grotesk", "sans-serif"],
-        body: ["DM Sans", "sans-serif"],
-        mono: ["JetBrains Mono", "monospace"],
+        display: ["Sora", "sans-serif"],
+        drama: ["Instrument Serif", "serif"],
+        mono: ["Fira Code", "monospace"],
+        heading: ["Sora", "sans-serif"],
+        body: ["Sora", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -101,6 +107,10 @@ export default {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
         },
+        "spin-slow": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -111,10 +121,11 @@ export default {
         "pulse-glow": "pulseGlow 3s ease-in-out infinite",
         "typing-dot": "typingDot 1.4s ease-in-out infinite",
         shimmer: "shimmer 3s ease-in-out infinite",
+        "spin-slow": "spin-slow 20s linear infinite",
       },
       backgroundImage: {
-        "hero-glow": "radial-gradient(ellipse 80% 50% at 50% -20%, rgba(124,58,237,0.15), transparent)",
-        "section-glow": "radial-gradient(ellipse 60% 40% at 50% 50%, rgba(99,102,241,0.08), transparent)",
+        "hero-glow": "radial-gradient(ellipse 80% 50% at 50% -20%, rgba(124,58,237,0.12), transparent)",
+        "section-glow": "radial-gradient(ellipse 60% 40% at 50% 50%, rgba(99,102,241,0.06), transparent)",
       },
       boxShadow: {
         "glow-purple": "0 0 30px rgba(124,58,237,0.25), 0 8px 32px rgba(0,0,0,0.3)",
