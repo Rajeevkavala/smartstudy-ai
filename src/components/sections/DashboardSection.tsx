@@ -2,7 +2,8 @@ import { motion } from 'framer-motion';
 import { Bot, FileText, Star, GraduationCap, BarChart3, Copy } from 'lucide-react';
 import SectionBadge from '@/components/ui/SectionBadge';
 import GradientText from '@/components/ui/GradientText';
-import { fadeUp } from '@/lib/animations';
+
+const ease: [number, number, number, number] = [0.25, 0.1, 0.25, 1];
 
 const sidebarItems = [
   { icon: FileText, label: 'My PDFs', active: true },
@@ -24,11 +25,10 @@ export default function DashboardSection() {
           <p className="text-text-muted mt-4 max-w-xl mx-auto">Everything organized in one clean, intelligent interface</p>
         </div>
 
-        <motion.div {...fadeUp} className="relative mt-12 max-w-6xl mx-auto">
+        <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease }} className="relative mt-12 max-w-6xl mx-auto">
           <div className="absolute -inset-6 bg-[radial-gradient(ellipse_at_center,rgba(99,102,241,0.1),transparent)] blur-3xl -z-10" />
           <div className="glass-card rounded-3xl overflow-hidden">
             <div className="grid grid-cols-1 md:grid-cols-[220px_1fr] min-h-[420px]">
-              {/* Sidebar */}
               <div className="bg-surface border-r border-border/50 p-4 hidden md:flex flex-col">
                 <div className="flex items-center gap-2 mb-6">
                   <div className="w-7 h-7 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/30">
@@ -56,7 +56,6 @@ export default function DashboardSection() {
                 </div>
               </div>
 
-              {/* Main */}
               <div className="bg-[#0D1525] p-6">
                 <div className="flex items-center gap-1 font-mono text-xs text-text-muted mb-4">
                   <FileText size={12} /> <span>My PDFs</span> <span className="mx-1">/</span> <span>DBMS Notes</span> <span className="mx-1">/</span> <span className="text-text-secondary">Chapter 4</span>
@@ -80,7 +79,7 @@ export default function DashboardSection() {
                     {[
                       { term: 'Atomicity', def: 'All operations complete or none do — no partial transactions.' },
                       { term: 'Consistency', def: 'Database moves from one valid state to another.' },
-                      { term: 'Isolation', def: 'Concurrent transactions don\'t interfere with each other.' },
+                      { term: 'Isolation', def: "Concurrent transactions don't interfere with each other." },
                       { term: 'Durability', def: 'Committed changes persist even after system failure.' },
                     ].map((item) => (
                       <p key={item.term} className="text-xs text-text-secondary"><strong className="text-foreground">{item.term}:</strong> {item.def}</p>

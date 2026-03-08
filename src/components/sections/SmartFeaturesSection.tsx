@@ -2,7 +2,8 @@ import { motion } from 'framer-motion';
 import { Library, BrainCircuit, FileCheck, SearchCode } from 'lucide-react';
 import SectionBadge from '@/components/ui/SectionBadge';
 import GradientText from '@/components/ui/GradientText';
-import { staggerItem } from '@/lib/animations';
+
+const ease: [number, number, number, number] = [0.25, 0.1, 0.25, 1];
 
 const features = [
   { icon: Library, title: 'Multi-PDF Knowledge Base', desc: 'Upload multiple study materials. AI cross-references across all your documents for comprehensive answers.', badge: 'Multi-document' },
@@ -26,7 +27,7 @@ export default function SmartFeaturesSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
           {features.map((f, i) => (
-            <motion.div key={f.title} {...staggerItem} transition={{ ...staggerItem.transition, delay: i * 0.1 }} className="glass-card-hover p-6">
+            <motion.div key={f.title} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, ease, delay: i * 0.1 }} className="glass-card-hover p-6">
               <div className="flex items-start gap-4">
                 <div className="icon-container shrink-0">
                   <f.icon size={22} className="text-text-accent" />

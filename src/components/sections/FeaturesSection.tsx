@@ -2,7 +2,8 @@ import { motion } from 'framer-motion';
 import { FileUp, MessageSquare, ListChecks, Zap, Target, BarChart3 } from 'lucide-react';
 import SectionBadge from '@/components/ui/SectionBadge';
 import GradientText from '@/components/ui/GradientText';
-import { staggerItem } from '@/lib/animations';
+
+const ease: [number, number, number, number] = [0.25, 0.1, 0.25, 1];
 
 const features = [
   { icon: FileUp, title: 'Upload Study Material', desc: 'Upload PDFs, notes, or textbooks. Our AI processes and indexes your content instantly.' },
@@ -32,8 +33,10 @@ export default function FeaturesSection() {
           {features.map((f, i) => (
             <motion.div
               key={f.title}
-              {...staggerItem}
-              transition={{ ...staggerItem.transition, delay: i * 0.1 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, ease, delay: i * 0.1 }}
               className="glass-card-hover p-6"
             >
               <div className="icon-container mb-4">

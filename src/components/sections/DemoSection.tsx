@@ -2,7 +2,8 @@ import { motion } from 'framer-motion';
 import { FileText, Bot, Send } from 'lucide-react';
 import SectionBadge from '@/components/ui/SectionBadge';
 import GradientText from '@/components/ui/GradientText';
-import { fadeUp } from '@/lib/animations';
+
+const ease: [number, number, number, number] = [0.25, 0.1, 0.25, 1];
 
 export default function DemoSection() {
   return (
@@ -18,11 +19,10 @@ export default function DemoSection() {
           </p>
         </div>
 
-        <motion.div {...fadeUp} className="relative mt-12 max-w-5xl mx-auto">
+        <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease }} className="relative mt-12 max-w-5xl mx-auto">
           <div className="absolute -inset-8 bg-[radial-gradient(ellipse_at_center,rgba(124,58,237,0.12),transparent)] blur-3xl -z-10" />
           <div className="glass-card rounded-3xl p-1 overflow-hidden">
             <div className="grid grid-cols-1 lg:grid-cols-5 min-h-[450px]">
-              {/* PDF Viewer */}
               <div className="lg:col-span-2 bg-surface rounded-tl-3xl lg:rounded-bl-3xl">
                 <div className="px-4 py-3 border-b border-border/50 flex items-center gap-2">
                   <FileText size={14} className="text-text-accent" />
@@ -45,7 +45,6 @@ export default function DemoSection() {
                 </div>
               </div>
 
-              {/* Chat */}
               <div className="lg:col-span-3 flex flex-col bg-background/50 rounded-b-3xl lg:rounded-bl-none lg:rounded-r-3xl">
                 <div className="px-5 py-3 border-b border-border/50 flex items-center gap-2">
                   <Bot size={16} className="text-text-accent" />

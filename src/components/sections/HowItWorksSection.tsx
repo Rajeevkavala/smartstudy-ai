@@ -2,7 +2,8 @@ import { motion } from 'framer-motion';
 import { Upload, Search, SlidersHorizontal, CheckCircle } from 'lucide-react';
 import SectionBadge from '@/components/ui/SectionBadge';
 import GradientText from '@/components/ui/GradientText';
-import { staggerItem } from '@/lib/animations';
+
+const ease: [number, number, number, number] = [0.25, 0.1, 0.25, 1];
 
 const steps = [
   { icon: Upload, title: 'Upload your PDF', desc: 'Upload your notes, textbooks, or study material. Supports multi-PDF knowledge base.' },
@@ -24,11 +25,10 @@ export default function HowItWorksSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-16 relative">
-          {/* Connector line */}
           <div className="hidden md:block absolute top-10 left-[12.5%] right-[12.5%] h-px z-0" style={{ background: 'linear-gradient(90deg, #7C3AED, #6366F1, #3B82F6, #06B6D4)' }} />
 
           {steps.map((s, i) => (
-            <motion.div key={s.title} {...staggerItem} transition={{ ...staggerItem.transition, delay: i * 0.15 }} className="glass-card p-6 text-center relative z-10">
+            <motion.div key={s.title} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, ease, delay: i * 0.15 }} className="glass-card p-6 text-center relative z-10">
               <div className="w-10 h-10 rounded-full flex items-center justify-center font-heading font-bold text-sm mx-auto mb-4 text-foreground" style={{ background: 'linear-gradient(135deg, #7C3AED, #6366F1)' }}>
                 {i + 1}
               </div>

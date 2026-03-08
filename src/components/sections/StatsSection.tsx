@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
 import { MessageSquare, GraduationCap, Zap } from 'lucide-react';
 import AnimatedCounter from '@/components/ui/AnimatedCounter';
-import { staggerItem } from '@/lib/animations';
+
+const ease: [number, number, number, number] = [0.25, 0.1, 0.25, 1];
 
 const stats = [
   { target: 10, suffix: 'M+', label: 'Questions Answered', icon: MessageSquare },
@@ -15,7 +16,7 @@ export default function StatsSection() {
       <div className="max-w-4xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {stats.map((s, i) => (
-            <motion.div key={s.label} {...staggerItem} transition={{ ...staggerItem.transition, delay: i * 0.15 }} className="glass-card p-8 text-center">
+            <motion.div key={s.label} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, ease, delay: i * 0.15 }} className="glass-card p-8 text-center">
               <div className="icon-container mx-auto mb-4">
                 <s.icon size={22} className="text-text-accent" />
               </div>
