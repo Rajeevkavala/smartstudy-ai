@@ -58,18 +58,43 @@ export default function Navbar() {
         </div>
 
         <div className="hidden md:flex items-center gap-2.5">
-          <Link to="/auth" className="text-sm cursor-pointer transition-colors" style={{ color: 'hsl(var(--text-muted))' }}>Log in</Link>
-          <Link
-            to="/auth"
-            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium text-primary-foreground transition-all duration-300 cursor-pointer hover:translate-y-[-1px]"
-            style={{
-              background: 'hsl(var(--primary))',
-              boxShadow: '0 2px 12px hsl(var(--primary) / 0.3)',
-            }}
-          >
-            Try Free
-            <ArrowRight size={13} />
-          </Link>
+          {user ? (
+            <>
+              <Link
+                to="/dashboard"
+                className="inline-flex items-center gap-1.5 text-sm cursor-pointer transition-colors"
+                style={{ color: 'hsl(var(--text-muted))' }}
+              >
+                <LayoutDashboard size={14} />
+                Dashboard
+              </Link>
+              <button
+                onClick={() => signOut()}
+                className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium cursor-pointer transition-all duration-300 hover:translate-y-[-1px]"
+                style={{
+                  background: 'hsl(var(--muted) / 0.3)',
+                  color: 'hsl(var(--foreground))',
+                }}
+              >
+                Sign out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/auth" className="text-sm cursor-pointer transition-colors" style={{ color: 'hsl(var(--text-muted))' }}>Log in</Link>
+              <Link
+                to="/auth"
+                className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium text-primary-foreground transition-all duration-300 cursor-pointer hover:translate-y-[-1px]"
+                style={{
+                  background: 'hsl(var(--primary))',
+                  boxShadow: '0 2px 12px hsl(var(--primary) / 0.3)',
+                }}
+              >
+                Try Free
+                <ArrowRight size={13} />
+              </Link>
+            </>
+          )}
         </div>
 
         <button
