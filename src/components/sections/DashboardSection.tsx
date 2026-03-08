@@ -1,90 +1,112 @@
 import { motion } from 'framer-motion';
-import { Bot, FileText, Star, GraduationCap, BarChart3, Copy } from 'lucide-react';
-import SectionBadge from '@/components/ui/SectionBadge';
-import GradientText from '@/components/ui/GradientText';
+import { Bot, FileText, Star, GraduationCap, BarChart3, Copy, ChevronRight } from 'lucide-react';
 
-const ease: [number, number, number, number] = [0.25, 0.1, 0.25, 1];
+const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const sidebarItems = [
   { icon: FileText, label: 'My PDFs', active: true },
   { icon: Bot, label: 'Ask AI', active: false },
-  { icon: Star, label: 'Important Questions', active: false },
-  { icon: GraduationCap, label: 'Practice Mode', active: false },
+  { icon: Star, label: 'Important', active: false },
+  { icon: GraduationCap, label: 'Practice', active: false },
   { icon: BarChart3, label: 'Progress', active: false },
 ];
 
 export default function DashboardSection() {
   return (
-    <section className="py-24 px-4">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center">
-          <SectionBadge>Dashboard</SectionBadge>
-          <h2 className="font-heading text-3xl md:text-4xl font-bold mt-4">
-            <GradientText>Your AI-powered study hub</GradientText>
-          </h2>
-          <p className="text-text-muted mt-4 max-w-xl mx-auto">Everything organized in one clean, intelligent interface</p>
+    <section className="py-28 px-6">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center max-w-lg mx-auto">
+          <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="section-label">
+            Dashboard
+          </motion.span>
+          <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, ease }} className="font-heading text-3xl md:text-4xl font-bold mt-3 text-foreground">
+            Your study hub.
+          </motion.h2>
+          <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, ease, delay: 0.1 }} className="text-text-muted mt-3 text-sm">
+            Everything organized in one clean, intelligent interface.
+          </motion.p>
         </div>
 
-        <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease }} className="relative mt-12 max-w-6xl mx-auto">
-          <div className="absolute -inset-6 bg-[radial-gradient(ellipse_at_center,rgba(99,102,241,0.1),transparent)] blur-3xl -z-10" />
-          <div className="glass-card rounded-3xl overflow-hidden">
-            <div className="grid grid-cols-1 md:grid-cols-[220px_1fr] min-h-[420px]">
-              <div className="bg-surface border-r border-border/50 p-4 hidden md:flex flex-col">
-                <div className="flex items-center gap-2 mb-6">
-                  <div className="w-7 h-7 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/30">
-                    <Bot size={14} className="text-primary" />
+        <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease }} className="relative mt-14 max-w-5xl mx-auto">
+          <div className="absolute -inset-8 bg-[radial-gradient(ellipse_at_center,rgba(99,102,241,0.06),transparent)] blur-3xl -z-10" />
+          
+          <div className="rounded-2xl border border-border/30 overflow-hidden bg-card/30 shadow-glass">
+            {/* Window chrome */}
+            <div className="flex items-center gap-2 px-4 py-2 border-b border-border/20 bg-card/60">
+              <div className="flex gap-1.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-destructive/50" />
+                <div className="w-2.5 h-2.5 rounded-full bg-amber-400/50" />
+                <div className="w-2.5 h-2.5 rounded-full bg-success/50" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] min-h-[400px]">
+              {/* Sidebar */}
+              <div className="border-r border-border/15 p-3 hidden md:flex flex-col bg-card/20">
+                <div className="flex items-center gap-2 mb-5 px-2">
+                  <div className="w-6 h-6 rounded-md bg-primary/15 flex items-center justify-center">
+                    <Bot size={12} className="text-primary" />
                   </div>
-                  <span className="font-heading font-bold text-sm gradient-text">SmartExam AI</span>
+                  <span className="font-heading font-semibold text-xs text-foreground">SmartExam</span>
                 </div>
-                <div className="border-t border-border/50 mb-4" />
-                <nav className="space-y-1 flex-1">
+                <nav className="space-y-0.5 flex-1">
                   {sidebarItems.map((item) => (
-                    <div key={item.label} className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm cursor-pointer transition-colors ${item.active ? 'bg-primary/10 border-l-2 border-primary text-text-accent' : 'text-text-muted hover:text-foreground hover:bg-surface-elevated'}`}>
-                      <item.icon size={16} />
+                    <div key={item.label} className={`flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs cursor-pointer transition-all duration-300 ${item.active ? 'bg-primary/10 text-text-accent' : 'text-text-muted hover:text-foreground hover:bg-muted/20'}`}>
+                      <item.icon size={14} />
                       <span>{item.label}</span>
                     </div>
                   ))}
                 </nav>
-                <div className="border-t border-border/50 pt-3 mt-auto">
+                <div className="border-t border-border/15 pt-3 mt-auto px-2">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-primary/20" />
-                    <div>
-                      <p className="text-xs text-foreground">Student</p>
-                      <p className="text-xs text-text-accent cursor-pointer">Upgrade Plan</p>
-                    </div>
+                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary/30 to-accent/30" />
+                    <span className="text-[10px] text-text-muted">Free Plan</span>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-[#0D1525] p-6">
-                <div className="flex items-center gap-1 font-mono text-xs text-text-muted mb-4">
-                  <FileText size={12} /> <span>My PDFs</span> <span className="mx-1">/</span> <span>DBMS Notes</span> <span className="mx-1">/</span> <span className="text-text-secondary">Chapter 4</span>
+              {/* Main content */}
+              <div className="p-5 bg-background/60">
+                <div className="flex items-center gap-1 text-[10px] text-text-muted font-mono mb-4">
+                  <span>My PDFs</span>
+                  <ChevronRight size={10} />
+                  <span>DBMS Notes</span>
+                  <ChevronRight size={10} />
+                  <span className="text-text-secondary">Chapter 4</span>
                 </div>
-                <div className="glass-card p-4 mb-4">
+                
+                {/* Question */}
+                <div className="rounded-xl border border-border/20 bg-card/20 p-4 mb-3">
                   <p className="text-foreground font-medium text-sm">Q: Explain the ACID properties of database transactions.</p>
-                  <span className="section-badge text-[10px] mt-2 inline-block">8-mark answer</span>
+                  <div className="flex items-center gap-2 mt-2">
+                    <span className="text-[10px] font-mono text-text-accent bg-primary/8 px-2 py-0.5 rounded">8-mark answer</span>
+                  </div>
                 </div>
-                <div className="glass-card p-4">
+
+                {/* Answer */}
+                <div className="rounded-xl border border-border/20 bg-card/20 p-4">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
-                      <Bot size={14} className="text-text-accent" />
-                      <span className="text-sm font-medium text-text-secondary">AI Answer</span>
+                      <Bot size={13} className="text-text-accent" />
+                      <span className="text-xs font-medium text-text-secondary">AI Answer</span>
                     </div>
-                    <button className="p-1.5 rounded hover:bg-surface-elevated cursor-pointer transition-colors" aria-label="Copy">
-                      <Copy size={14} className="text-text-muted" />
+                    <button className="p-1 rounded hover:bg-muted/20 cursor-pointer transition-colors" aria-label="Copy">
+                      <Copy size={12} className="text-text-muted" />
                     </button>
                   </div>
                   <div className="space-y-2 text-sm">
-                    <p className="font-heading font-semibold text-foreground">ACID Properties (8 Marks)</p>
+                    <p className="font-heading font-semibold text-foreground text-xs">ACID Properties (8 Marks)</p>
                     {[
-                      { term: 'Atomicity', def: 'All operations complete or none do — no partial transactions.' },
+                      { term: 'Atomicity', def: 'All operations complete or none do.' },
                       { term: 'Consistency', def: 'Database moves from one valid state to another.' },
-                      { term: 'Isolation', def: "Concurrent transactions don't interfere with each other." },
-                      { term: 'Durability', def: 'Committed changes persist even after system failure.' },
+                      { term: 'Isolation', def: "Concurrent transactions don't interfere." },
+                      { term: 'Durability', def: 'Committed changes persist after failure.' },
                     ].map((item) => (
-                      <p key={item.term} className="text-xs text-text-secondary"><strong className="text-foreground">{item.term}:</strong> {item.def}</p>
+                      <p key={item.term} className="text-[11px] text-text-secondary leading-relaxed">
+                        <span className="text-text-accent font-medium">{item.term}</span> — {item.def}
+                      </p>
                     ))}
-                    <p className="font-mono text-xs text-text-muted pt-2 border-t border-border/50">~180 words</p>
+                    <p className="font-mono text-[10px] text-text-muted pt-2 border-t border-border/15">~180 words · Ch. 4, Page 42</p>
                   </div>
                 </div>
               </div>

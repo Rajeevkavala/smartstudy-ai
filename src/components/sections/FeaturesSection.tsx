@@ -1,48 +1,56 @@
 import { motion } from 'framer-motion';
-import { FileUp, MessageSquare, ListChecks, Zap, Target, BarChart3 } from 'lucide-react';
-import SectionBadge from '@/components/ui/SectionBadge';
-import GradientText from '@/components/ui/GradientText';
+import { FileUp, MessageSquare, ListChecks, Zap, Target, BarChart3, ArrowUpRight } from 'lucide-react';
 
-const ease: [number, number, number, number] = [0.25, 0.1, 0.25, 1];
+const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const features = [
-  { icon: FileUp, title: 'Upload Study Material', desc: 'Upload PDFs, notes, or textbooks. Our AI processes and indexes your content instantly.' },
-  { icon: MessageSquare, title: 'Ask Questions', desc: 'Ask questions directly from the uploaded document. Get precise, contextual answers.' },
-  { icon: ListChecks, title: 'Mark-based Answers', desc: 'Generate structured answers for 2-mark, 4-mark, 8-mark, and 16-mark questions.' },
-  { icon: Zap, title: 'Instant Summaries', desc: 'Get chapter and topic summaries instantly. Focus on what matters for your exam.' },
-  { icon: Target, title: 'Smart Exam Mode', desc: 'Focus only on frequently asked and examinable questions. Maximize your study ROI.' },
-  { icon: BarChart3, title: 'Topic Insights', desc: 'Know which topics are most asked in exams. Prioritize your study sessions strategically.' },
+  { icon: FileUp, title: 'Upload Study Material', desc: 'Upload PDFs, notes, or textbooks. Our AI processes and indexes your content instantly.', span: 'lg:col-span-2' },
+  { icon: MessageSquare, title: 'Ask Questions', desc: 'Ask questions directly from the uploaded document. Get precise, contextual answers.', span: '' },
+  { icon: ListChecks, title: 'Mark-based Answers', desc: 'Generate structured answers for 2, 4, 8, and 16-mark exam questions.', span: '' },
+  { icon: Zap, title: 'Instant Summaries', desc: 'Get chapter and topic summaries instantly. Focus on what matters for your exam.', span: 'lg:col-span-2' },
+  { icon: Target, title: 'Smart Exam Mode', desc: 'Focus only on frequently asked questions. Maximize your study efficiency.', span: '' },
+  { icon: BarChart3, title: 'Topic Insights', desc: 'Know which topics are most asked. Prioritize your sessions strategically.', span: '' },
 ];
 
 export default function FeaturesSection() {
   return (
-    <section id="features" className="relative py-24 px-4">
-      <div className="absolute inset-0 bg-section-glow pointer-events-none" />
-      <div className="relative z-10 max-w-7xl mx-auto">
-        <div className="text-center">
-          <SectionBadge>Features</SectionBadge>
-          <h2 className="font-heading text-3xl md:text-4xl font-bold mt-4">
-            <GradientText>Accelerate your exam preparation</GradientText>
-          </h2>
-          <p className="text-text-muted mt-4 max-w-xl mx-auto">
-            Everything you need to ace your exams with AI-powered intelligence
-          </p>
+    <section id="features" className="relative py-28 px-6">
+      <div className="relative z-10 max-w-6xl mx-auto">
+        {/* Header — left-aligned for variety */}
+        <div className="max-w-xl">
+          <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="section-label">
+            Features
+          </motion.span>
+          <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, ease }} className="font-heading text-3xl md:text-4xl font-bold mt-3 text-foreground leading-tight">
+            Everything you need to
+            <br />
+            <span className="text-text-muted">ace your exams.</span>
+          </motion.h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-16">
+        {/* Bento grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mt-14">
           {features.map((f, i) => (
             <motion.div
               key={f.title}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, ease, delay: i * 0.1 }}
-              className="glass-card-hover p-6"
+              transition={{ duration: 0.4, ease, delay: i * 0.06 }}
+              className={`bento-card group ${f.span}`}
+              onMouseMove={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+              }}
             >
-              <div className="icon-container mb-4">
-                <f.icon size={22} className="text-text-accent" />
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/10 flex items-center justify-center">
+                  <f.icon size={18} className="text-text-accent" />
+                </div>
+                <ArrowUpRight size={14} className="text-text-muted/0 group-hover:text-text-muted transition-all duration-300" />
               </div>
-              <h3 className="font-heading font-semibold text-lg text-foreground mb-2">{f.title}</h3>
+              <h3 className="font-heading font-semibold text-base text-foreground mb-1.5">{f.title}</h3>
               <p className="text-text-muted text-sm leading-relaxed">{f.desc}</p>
             </motion.div>
           ))}

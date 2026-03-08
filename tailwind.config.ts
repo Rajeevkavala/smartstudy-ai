@@ -97,6 +97,10 @@ export default {
           "0%, 60%, 100%": { opacity: "0", transform: "translateY(0)" },
           "30%": { opacity: "1", transform: "translateY(-4px)" },
         },
+        shimmer: {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -106,10 +110,11 @@ export default {
         "float-slow": "float 8s ease-in-out infinite",
         "pulse-glow": "pulseGlow 3s ease-in-out infinite",
         "typing-dot": "typingDot 1.4s ease-in-out infinite",
+        shimmer: "shimmer 3s ease-in-out infinite",
       },
       backgroundImage: {
         "hero-glow": "radial-gradient(ellipse 80% 50% at 50% -20%, rgba(124,58,237,0.15), transparent)",
-        "section-glow": "radial-gradient(ellipse 60% 40% at 50% 50%, rgba(99,102,241,0.1), transparent)",
+        "section-glow": "radial-gradient(ellipse 60% 40% at 50% 50%, rgba(99,102,241,0.08), transparent)",
       },
       boxShadow: {
         "glow-purple": "0 0 30px rgba(124,58,237,0.25), 0 8px 32px rgba(0,0,0,0.3)",

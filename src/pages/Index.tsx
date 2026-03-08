@@ -17,10 +17,13 @@ const Index = () => {
       <main>
         <HeroSection />
         <TrustSection />
+        <div className="section-divider" />
         <FeaturesSection />
-        <DemoSection />
         <HowItWorksSection />
+        <div className="section-divider" />
+        <DemoSection />
         <SmartFeaturesSection />
+        <div className="section-divider" />
         <DashboardSection />
         <StatsSection />
         <CTASection />
