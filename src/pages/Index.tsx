@@ -8,7 +8,6 @@ import DemoSection from '@/components/sections/DemoSection';
 import StatsSection from '@/components/sections/StatsSection';
 import TestimonialsSection from '@/components/sections/TestimonialsSection';
 import SmartFeaturesSection from '@/components/sections/SmartFeaturesSection';
-import DashboardSection from '@/components/sections/DashboardSection';
 import FAQSection from '@/components/sections/FAQSection';
 import CTASection from '@/components/sections/CTASection';
 
@@ -19,17 +18,13 @@ const Index = () => {
       <main>
         <HeroSection />
         <TrustSection />
-        <div className="section-divider" />
+        <StatsSection />
         <FeaturesSection />
-        <div className="section-divider" />
         <HowItWorksSection />
         <DemoSection />
-        <StatsSection />
         <div className="section-divider" />
         <TestimonialsSection />
-        <div className="section-divider" />
         <SmartFeaturesSection />
-        <DashboardSection />
         <div className="section-divider" />
         <FAQSection />
         <CTASection />
