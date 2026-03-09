@@ -1,12 +1,32 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Mail, Lock, User, Eye, EyeOff, Sparkles } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { lovable } from "@/integrations/lovable";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+
+const EMAIL_COOLDOWN_SECONDS = 60;
+
+function getAuthErrorMessage(error: any): string {
+  const code = error?.code ?? error?.error_code ?? "";
+  const msg: string = error?.message ?? "";
+  if (code === "over_email_send_rate_limit" || msg.includes("rate limit")) {
+    return "Too many emails sent. Please wait a minute before trying again.";
+  }
+  if (code === "user_already_exists" || msg.includes("already registered")) {
+    return "An account with this email already exists. Try signing in instead.";
+  }
+  if (code === "invalid_credentials" || msg.includes("Invalid login")) {
+    return "Incorrect email or password.";
+  }
+  if (code === "email_not_confirmed") {
+    return "Please confirm your email before signing in. Check your inbox.";
+  }
+  return msg || "Something went wrong. Please try again.";
+}
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -15,11 +35,33 @@ export default function Auth() {
   const [fullName, setFullName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+  const cooldownRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    return () => {
+      if (cooldownRef.current) clearInterval(cooldownRef.current);
+    };
+  }, []);
+
+  function startCooldown() {
+    setCooldown(EMAIL_COOLDOWN_SECONDS);
+    cooldownRef.current = setInterval(() => {
+      setCooldown((s) => {
+        if (s <= 1) {
+          clearInterval(cooldownRef.current!);
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (cooldown > 0) return;
     setLoading(true);
 
     try {
@@ -31,10 +73,18 @@ export default function Auth() {
       } else {
         const { error } = await signUp(email, password, fullName);
         if (error) throw error;
+        startCooldown();
         toast.success("Check your email to confirm your account!");
       }
     } catch (error: any) {
-      toast.error(error.message);
+      const friendly = getAuthErrorMessage(error);
+      toast.error(friendly);
+      if (
+        error?.code === "over_email_send_rate_limit" ||
+        (error?.message ?? "").includes("rate limit")
+      ) {
+        startCooldown();
+      }
     } finally {
       setLoading(false);
     }
@@ -43,10 +93,13 @@ export default function Auth() {
   const handleGoogleSignIn = async () => {
     setLoading(true);
     try {
-      const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin + "/dashboard",
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: window.location.origin + "/dashboard",
+        },
       });
-      if (result.error) throw result.error;
+      if (error) throw error;
     } catch (error: any) {
       toast.error(error.message);
       setLoading(false);
@@ -137,8 +190,18 @@ export default function Auth() {
               </div>
             )}
 
-            <Button type="submit" className="w-full btn-primary" disabled={loading}>
-              {loading ? "Loading..." : isLogin ? "Sign in" : "Create account"}
+            <Button
+              type="submit"
+              className="w-full btn-primary"
+              disabled={loading || cooldown > 0}
+            >
+              {loading
+                ? "Loading..."
+                : cooldown > 0
+                ? `Resend available in ${cooldown}s`
+                : isLogin
+                ? "Sign in"
+                : "Create account"}
             </Button>
           </form>
 

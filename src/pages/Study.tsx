@@ -147,27 +147,40 @@ export default function Study() {
     setMessages(prev => [...prev, assistantMessage]);
 
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token ?? import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+      const requestMessages = [...messages, userMessage]
+        .filter((message) => message.role === "user" || message.role === "assistant")
+        .filter((message) => message.content.trim().length > 0)
+        .slice(-6)
+        .map(({ role, content }) => ({ role, content }));
+
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            Authorization: `Bearer ${token}`,
+            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
           },
           body: JSON.stringify({
-            messages: [{ role: "user", content: userMessage.content }],
-            documentContext: document?.extracted_text || "",
+            messages: requestMessages,
+            documentId,
             markLevel,
           }),
         }
       );
 
       if (!response.ok) {
+        const errorBody = await response.json().catch(() => null);
         if (response.status === 429) {
-          throw new Error("Rate limit exceeded. Please try again in a moment.");
+          throw new Error(errorBody?.error || "Rate limit exceeded. Please try again in a moment.");
         }
-        throw new Error("Failed to get response");
+        if (response.status === 404) {
+          throw new Error("Chat service is not deployed for the configured Supabase project.");
+        }
+        throw new Error(errorBody?.error || "Failed to get response");
       }
 
       // Stream the response
@@ -291,10 +304,10 @@ export default function Study() {
                 Exam Mode
               </Button>
             </Link>
-            <Link to={`/summary/${documentId}`}>
+            <Link to={`/flashcards/${documentId}`}>
               <Button variant="outline" size="sm">
                 <BookOpen className="w-4 h-4 mr-2" />
-                Summary
+                Flashcards
               </Button>
             </Link>
           </div>

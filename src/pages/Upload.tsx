@@ -59,10 +59,13 @@ export default function UploadPage() {
 
     setUploading(true);
     setProgress(10);
+    let uploadedDocumentId: string | null = null;
 
     try {
+      // Sanitize filename: replace any character that isn't alphanumeric, dash, underscore, or dot
+      const sanitizedName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
       // Upload to storage
-      const filePath = `${user.id}/${Date.now()}_${file.name}`;
+      const filePath = `${user.id}/${Date.now()}_${sanitizedName}`;
       setProgress(30);
 
       const { error: uploadError } = await supabase.storage
@@ -86,6 +89,30 @@ export default function UploadPage() {
         .single();
 
       if (docError) throw docError;
+      uploadedDocumentId = doc.id;
+
+      setProgress(70);
+
+      const { extractPdfPages } = await import("@/lib/pdf");
+      const extracted = await extractPdfPages(file);
+      if (!extracted.text.trim()) {
+        throw new Error("The PDF was uploaded, but no readable text could be extracted from it.");
+      }
+
+      setProgress(88);
+
+      const { error: extractionError } = await supabase.functions.invoke("extract-text", {
+        body: {
+          documentId: doc.id,
+          text: extracted.text,
+          pages: extracted.pages,
+        },
+      });
+
+      if (extractionError) {
+        throw extractionError;
+      }
+
       setProgress(100);
 
       toast.success("Document uploaded successfully!");
@@ -97,6 +124,12 @@ export default function UploadPage() {
 
     } catch (error: any) {
       console.error("Upload error:", error);
+      if (uploadedDocumentId) {
+        await supabase
+          .from("documents")
+          .update({ status: "error" })
+          .eq("id", uploadedDocumentId);
+      }
       toast.error(error.message || "Failed to upload document");
     } finally {
       setUploading(false);
@@ -251,8 +284,8 @@ export default function UploadPage() {
           <div className="mt-12 grid sm:grid-cols-3 gap-4 text-center">
             {[
               { icon: FileText, title: "PDF Support", desc: "Upload any PDF document" },
-              { icon: Sparkles, title: "AI Processing", desc: "Automatic text extraction" },
-              { icon: CheckCircle2, title: "Instant Access", desc: "Start studying immediately" },
+              { icon: Sparkles, title: "AI Processing", desc: "Automatic page extraction and retrieval indexing" },
+              { icon: CheckCircle2, title: "Instant Access", desc: "Start studying as soon as indexing finishes" },
             ].map((feature) => (
               <div key={feature.title} className="p-4">
                 <feature.icon className="w-8 h-8 text-primary mx-auto mb-2" />

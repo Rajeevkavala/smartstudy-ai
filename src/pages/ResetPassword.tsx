@@ -16,9 +16,9 @@ export default function ResetPassword() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if we have a recovery token in the URL
+    // Check if we have a valid recovery token in the URL
     const hash = window.location.hash;
-    if (hash && hash.includes("type=recovery")) {
+    if (hash && hash.includes("type=recovery") && hash.includes("access_token")) {
       setIsValidLink(true);
     }
   }, []);

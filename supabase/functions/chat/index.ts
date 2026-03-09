@@ -1,12 +1,12 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
-
-const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
+import {
+  buildDocumentContext,
+  callGroqStream,
+  corsHeaders,
+  createUserClient,
+  requireGroqApiKey,
+  requireUser,
+} from "../_shared/ai.ts";
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -14,12 +14,23 @@ serve(async (req) => {
   }
 
   try {
-    const GROQ_API_KEY = Deno.env.get("GROQ_API_KEY");
-    if (!GROQ_API_KEY) {
-      throw new Error("GROQ_API_KEY is not configured");
+    const authHeader = req.headers.get("authorization");
+    if (!authHeader) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
-    const { messages, documentContext, markLevel } = await req.json();
+    const supabase = createUserClient(authHeader);
+    await requireUser(supabase);
+    const groqApiKey = requireGroqApiKey();
+
+    const { messages = [], documentId, markLevel } = await req.json();
+    const latestUserMessage = [...messages].reverse().find((message) => message.role === "user");
+    const ragContext = documentId
+      ? await buildDocumentContext(supabase, documentId, latestUserMessage?.content ?? "")
+      : null;
 
     // Build the system prompt based on mark level
     const markInstructions = {
@@ -29,9 +40,9 @@ serve(async (req) => {
       "16M": "Provide an exhaustive answer covering all aspects. Include definitions, detailed explanations, multiple examples, diagrams descriptions, and comparisons where applicable.",
     };
 
-    const systemPrompt = `You are SmartExam AI, an intelligent study assistant that helps students prepare for exams. You answer questions based on the provided document context.
+    const systemPrompt = `You are SmartExam AI, an intelligent study assistant that helps students prepare for exams. You answer questions using the grounded study excerpts first, and only use general knowledge when the answer is not contained in the material.
 
-${documentContext ? `DOCUMENT CONTEXT:\n${documentContext}\n\n` : ""}
+${ragContext ? `DOCUMENT TITLE: ${ragContext.document.title}\nDOCUMENT EXCERPTS:\n${ragContext.context}\n\n` : ""}
 
 ANSWER FORMAT INSTRUCTIONS:
 ${markInstructions[markLevel as keyof typeof markInstructions] || markInstructions["4M"]}
@@ -41,25 +52,16 @@ Always structure your answers clearly with:
 - Key points (numbered or bulleted)
 - Examples where relevant
 - A brief conclusion if appropriate
+- Cite supporting excerpts using page references like [Page 3] whenever you rely on the document.
 
-If the question cannot be answered from the document context, politely indicate that and provide general guidance based on your knowledge.`;
+If the question cannot be answered from the document excerpts, say that directly and then provide the best general guidance you can.`;
 
-    const response = await fetch(GROQ_API_URL, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${GROQ_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "llama-3.3-70b-versatile",
-        messages: [
-          { role: "system", content: systemPrompt },
-          ...messages,
-        ],
-        stream: true,
-        temperature: 0.7,
-        max_tokens: markLevel === "16M" ? 2000 : markLevel === "8M" ? 1200 : markLevel === "4M" ? 600 : 300,
-      }),
+    const response = await callGroqStream({
+      apiKey: groqApiKey,
+      systemPrompt,
+      messages,
+      temperature: 0.6,
+      maxTokens: markLevel === "16M" ? 2000 : markLevel === "8M" ? 1200 : markLevel === "4M" ? 700 : 400,
     });
 
     if (!response.ok) {

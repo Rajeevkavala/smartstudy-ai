@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Menu, X, ArrowRight, LayoutDashboard } from 'lucide-react';
+import { Sparkles, Menu, X, ArrowRight, LayoutDashboard, CreditCard } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -8,6 +8,7 @@ const navLinks = [
   { label: 'Features', href: '#features' },
   { label: 'How it Works', href: '#how-it-works' },
   { label: 'Demo', href: '#demo' },
+  { label: 'Pricing', href: '/pricing', isRoute: true },
 ];
 
 export default function Navbar() {
@@ -42,19 +43,33 @@ export default function Navbar() {
         </a>
 
         <div className="hidden md:flex items-center gap-0.5">
-          {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="relative text-sm px-3 py-1.5 rounded-lg group cursor-pointer transition-colors duration-200"
-              style={{ color: 'hsl(var(--text-muted))' }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = 'hsl(var(--foreground))')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = 'hsl(var(--text-muted))')}
-            >
-              {link.label}
-              <span className="absolute bottom-0.5 left-3 right-3 h-px scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" style={{ background: 'hsl(var(--primary))' }} />
-            </a>
-          ))}
+          {navLinks.map((link) =>
+            (link as any).isRoute ? (
+              <Link
+                key={link.label}
+                to={link.href}
+                className="relative text-sm px-3 py-1.5 rounded-lg group cursor-pointer transition-colors duration-200"
+                style={{ color: 'hsl(var(--text-muted))' }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = 'hsl(var(--foreground))')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = 'hsl(var(--text-muted))')}
+              >
+                {link.label}
+                <span className="absolute bottom-0.5 left-3 right-3 h-px scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" style={{ background: 'hsl(var(--primary))' }} />
+              </Link>
+            ) : (
+              <a
+                key={link.label}
+                href={link.href}
+                className="relative text-sm px-3 py-1.5 rounded-lg group cursor-pointer transition-colors duration-200"
+                style={{ color: 'hsl(var(--text-muted))' }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = 'hsl(var(--foreground))')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = 'hsl(var(--text-muted))')}
+              >
+                {link.label}
+                <span className="absolute bottom-0.5 left-3 right-3 h-px scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" style={{ background: 'hsl(var(--primary))' }} />
+              </a>
+            )
+          )}
         </div>
 
         <div className="hidden md:flex items-center gap-2.5">
@@ -121,17 +136,29 @@ export default function Navbar() {
             }}
           >
             <div className="flex flex-col gap-1">
-              {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className="text-sm py-2.5 px-3 rounded-lg cursor-pointer transition-colors"
-                  style={{ color: 'hsl(var(--text-muted))' }}
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {link.label}
-                </a>
-              ))}
+              {navLinks.map((link) =>
+                (link as any).isRoute ? (
+                  <Link
+                    key={link.label}
+                    to={link.href}
+                    className="text-sm py-2.5 px-3 rounded-lg cursor-pointer transition-colors"
+                    style={{ color: 'hsl(var(--text-muted))' }}
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    className="text-sm py-2.5 px-3 rounded-lg cursor-pointer transition-colors"
+                    style={{ color: 'hsl(var(--text-muted))' }}
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    {link.label}
+                  </a>
+                )
+              )}
               <div className="mt-3 pt-3" style={{ borderTop: '1px solid hsl(var(--border) / 0.3)' }}>
                 {user ? (
                   <>

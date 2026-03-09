@@ -80,29 +80,25 @@ export default function ExamMode() {
 
   const generateQuestions = async () => {
     if (!document) return;
+    if (document.status !== "ready") {
+      toast.error("This document is still being processed. Try again once indexing is complete.");
+      return;
+    }
     setGenerating(true);
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-questions`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-          },
-          body: JSON.stringify({
-            documentContext: document.extracted_text || "Sample document about database concepts including normalization, ACID properties, indexing, and SQL queries.",
-            questionCount,
-            difficulty,
-            mode,
-          }),
-        }
-      );
+      const { data, error } = await supabase.functions.invoke("generate-questions", {
+        body: {
+          documentId: document.id,
+          questionCount,
+          difficulty,
+          mode,
+        },
+      });
 
-      if (!response.ok) throw new Error("Failed to generate questions");
-
-      const data = await response.json();
+      if (error) {
+        throw error;
+      }
       
       setSession({
         questions: data.questions,

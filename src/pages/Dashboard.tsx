@@ -3,12 +3,17 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
   Plus, FileText, MessageSquare, Brain, TrendingUp, 
-  Clock, Upload, Sparkles, LogOut, User, ChevronRight
+  Clock, Upload, Sparkles, LogOut, User, ChevronRight,
+  Flame, Star, Target, Swords, BookOpen, CalendarDays,
+  BarChart3, Settings, Trophy, Layers, Zap,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
+import { useGamification } from "@/hooks/useGamification";
+import { useSubscription } from "@/hooks/useSubscription";
 
 interface Document {
   id: string;
@@ -35,6 +40,8 @@ export default function Dashboard() {
     studyTime: 0,
   });
   const [loading, setLoading] = useState(true);
+  const { profile: gamification } = useGamification();
+  const { subscription, isPro } = useSubscription();
 
   useEffect(() => {
     loadData();
@@ -105,6 +112,11 @@ export default function Dashboard() {
             <span className="text-sm text-text-secondary hidden sm:block">
               {user?.email}
             </span>
+            <Link to="/settings">
+              <Button variant="ghost" size="sm">
+                <Settings className="w-4 h-4" />
+              </Button>
+            </Link>
             <Button variant="ghost" size="sm" onClick={handleSignOut}>
               <LogOut className="w-4 h-4 mr-2" />
               Sign out
@@ -152,8 +164,41 @@ export default function Dashboard() {
           ))}
         </div>
 
+        {/* Gamification bar */}
+        {gamification && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35 }}
+            className="glass-card p-4 mb-8 flex items-center gap-6 flex-wrap"
+          >
+            <div className="flex items-center gap-2">
+              <Star className="w-5 h-5 text-primary" />
+              <span className="font-bold">Level {gamification.level}</span>
+            </div>
+            <div className="flex items-center gap-2 flex-1 min-w-[120px] max-w-xs">
+              <Progress value={((gamification.xp % 500) / 500) * 100} className="h-2 flex-1" />
+              <span className="text-xs text-text-muted">{gamification.xp} XP</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Flame className="w-5 h-5 text-orange-500" />
+              <span className="font-semibold">{gamification.current_streak}</span>
+              <span className="text-xs text-text-muted">day streak</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Clock className="w-4 h-4 text-text-muted" />
+              <span className="text-sm text-text-muted">{gamification.total_study_minutes}m studied</span>
+            </div>
+            {!isPro && (
+              <Link to="/pricing" className="ml-auto text-xs px-3 py-1 rounded-full bg-primary/10 text-primary font-medium hover:bg-primary/20 transition-colors">
+                Upgrade to Pro
+              </Link>
+            )}
+          </motion.div>
+        )}
+
         {/* Quick actions */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
           <Link to="/upload">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -161,13 +206,13 @@ export default function Dashboard() {
               transition={{ delay: 0.4 }}
               className="bento-card group cursor-pointer h-full"
             >
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                  <Upload className="w-7 h-7 text-primary" />
+              <div className="flex flex-col items-center text-center gap-3 py-2">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                  <Upload className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-1">Upload Document</h3>
-                  <p className="text-sm text-text-muted">Add PDFs to start studying</p>
+                  <h3 className="font-semibold text-sm">Upload</h3>
+                  <p className="text-xs text-text-muted">Add PDFs</p>
                 </div>
               </div>
             </motion.div>
@@ -177,35 +222,130 @@ export default function Dashboard() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
+              transition={{ delay: 0.45 }}
               className="bento-card group cursor-pointer h-full"
             >
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-xl bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
-                  <Brain className="w-7 h-7 text-accent" />
+              <div className="flex flex-col items-center text-center gap-3 py-2">
+                <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                  <Brain className="w-6 h-6 text-accent" />
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-1">Exam Mode</h3>
-                  <p className="text-sm text-text-muted">Practice with AI questions</p>
+                  <h3 className="font-semibold text-sm">Exam Mode</h3>
+                  <p className="text-xs text-text-muted">Practice questions</p>
                 </div>
               </div>
             </motion.div>
           </Link>
 
-          <Link to="/insights">
+          <Link to="/flashcards">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="bento-card group cursor-pointer h-full"
+            >
+              <div className="flex flex-col items-center text-center gap-3 py-2">
+                <div className="w-12 h-12 rounded-xl bg-success/10 flex items-center justify-center group-hover:bg-success/20 transition-colors">
+                  <Layers className="w-6 h-6 text-success" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm">Flashcards</h3>
+                  <p className="text-xs text-text-muted">Spaced repetition</p>
+                </div>
+              </div>
+            </motion.div>
+          </Link>
+
+          <Link to="/battles">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.55 }}
+              className="bento-card group cursor-pointer h-full"
+            >
+              <div className="flex flex-col items-center text-center gap-3 py-2">
+                <div className="w-12 h-12 rounded-xl bg-destructive/10 flex items-center justify-center group-hover:bg-destructive/20 transition-colors">
+                  <Swords className="w-6 h-6 text-destructive" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm">Battles</h3>
+                  <p className="text-xs text-text-muted">Challenge friends</p>
+                </div>
+              </div>
+            </motion.div>
+          </Link>
+
+          <Link to="/study-planner">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
               className="bento-card group cursor-pointer h-full"
             >
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-xl bg-success/10 flex items-center justify-center group-hover:bg-success/20 transition-colors">
-                  <TrendingUp className="w-7 h-7 text-success" />
+              <div className="flex flex-col items-center text-center gap-3 py-2">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                  <CalendarDays className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-1">View Insights</h3>
-                  <p className="text-sm text-text-muted">Track your progress</p>
+                  <h3 className="font-semibold text-sm">Study Plan</h3>
+                  <p className="text-xs text-text-muted">AI scheduler</p>
+                </div>
+              </div>
+            </motion.div>
+          </Link>
+
+          <Link to="/weakness-radar">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.65 }}
+              className="bento-card group cursor-pointer h-full"
+            >
+              <div className="flex flex-col items-center text-center gap-3 py-2">
+                <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                  <Target className="w-6 h-6 text-accent" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm">Weakness Radar</h3>
+                  <p className="text-xs text-text-muted">Find weak spots</p>
+                </div>
+              </div>
+            </motion.div>
+          </Link>
+
+          <Link to="/pyq-analyzer">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 }}
+              className="bento-card group cursor-pointer h-full"
+            >
+              <div className="flex flex-col items-center text-center gap-3 py-2">
+                <div className="w-12 h-12 rounded-xl bg-success/10 flex items-center justify-center group-hover:bg-success/20 transition-colors">
+                  <BarChart3 className="w-6 h-6 text-success" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm">PYQ Analyzer</h3>
+                  <p className="text-xs text-text-muted">Past year patterns</p>
+                </div>
+              </div>
+            </motion.div>
+          </Link>
+
+          <Link to="/leaderboard">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.75 }}
+              className="bento-card group cursor-pointer h-full"
+            >
+              <div className="flex flex-col items-center text-center gap-3 py-2">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                  <Trophy className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm">Leaderboard</h3>
+                  <p className="text-xs text-text-muted">Rankings & badges</p>
                 </div>
               </div>
             </motion.div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Mail, ArrowLeft, Sparkles } from "lucide-react";
@@ -7,13 +7,37 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
+const EMAIL_COOLDOWN_SECONDS = 60;
+
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+  const cooldownRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (cooldownRef.current) clearInterval(cooldownRef.current);
+    };
+  }, []);
+
+  function startCooldown() {
+    setCooldown(EMAIL_COOLDOWN_SECONDS);
+    cooldownRef.current = setInterval(() => {
+      setCooldown((s) => {
+        if (s <= 1) {
+          clearInterval(cooldownRef.current!);
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (cooldown > 0) return;
     setLoading(true);
 
     try {
@@ -22,9 +46,17 @@ export default function ForgotPassword() {
       });
       if (error) throw error;
       setSent(true);
+      startCooldown();
       toast.success("Check your email for the reset link!");
     } catch (error: any) {
-      toast.error(error.message);
+      const code = error?.code ?? error?.error_code ?? "";
+      const msg: string = error?.message ?? "";
+      if (code === "over_email_send_rate_limit" || msg.includes("rate limit")) {
+        toast.error("Too many emails sent. Please wait a minute before trying again.");
+        startCooldown();
+      } else {
+        toast.error(msg || "Something went wrong. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -66,8 +98,16 @@ export default function ForgotPassword() {
                 />
               </div>
 
-              <Button type="submit" className="w-full btn-primary" disabled={loading}>
-                {loading ? "Sending..." : "Send reset link"}
+              <Button
+                type="submit"
+                className="w-full btn-primary"
+                disabled={loading || cooldown > 0}
+              >
+                {loading
+                  ? "Sending..."
+                  : cooldown > 0
+                  ? `Resend in ${cooldown}s`
+                  : "Send reset link"}
               </Button>
             </form>
           ) : (
@@ -78,6 +118,14 @@ export default function ForgotPassword() {
               <p className="text-text-secondary mb-4">
                 Check your inbox at <strong className="text-foreground">{email}</strong>
               </p>
+              <Button
+                variant="outline"
+                className="w-full"
+                disabled={cooldown > 0 || loading}
+                onClick={() => setSent(false)}
+              >
+                {cooldown > 0 ? `Resend in ${cooldown}s` : "Resend email"}
+              </Button>
             </div>
           )}
 
